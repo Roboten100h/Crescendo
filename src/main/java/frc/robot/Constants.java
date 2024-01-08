@@ -16,4 +16,23 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class DriveTrain {
+    public static final int motorLeftFrontPort = 1;
+    public static final int motorLeftRearPort = 2;
+    public static final int motorRightFrontPort = 3;
+    public static final int motorRightRearPort = 4;
+
+    public static final double slowSpeed = 0.5; 
+    public static final double regularSpeed = 0.7;
+  }
+
+  public static class Outtake {
+    public static final int leftOuttakeMotorPort = 6;
+    public static final int rightOuttakeMotorPort = 7;
+    public static final int feederMotorPort = 5;
+    
+    public static final double shootingSpeed = 1;
+    public static final double feedingSpeed = 1;
+  }
 }
