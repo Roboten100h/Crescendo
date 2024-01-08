@@ -5,10 +5,15 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+// import frc.robot.commands.Autos;
+
 import frc.robot.subsystems.DriveTrain;
 
 import frc.robot.subsystems.Outtake;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,9 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
   private final Outtake m_outtakeSubsystem = new Outtake();
   // private final DriveTrain m_driveTrain = new DriveTrain();
 
@@ -53,6 +55,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    m_driverController.rightBumper()
+      .onTrue(Commands.runOnce(() -> m_outtakeSubsystem.setFeederSpeed(m_driverController.getRightY())))
+      .onFalse(Commands.runOnce(() -> m_outtakeSubsystem.stopFeeder()));
+    
+    m_driverController.leftBumper()
+      .onTrue(Commands.runOnce(() -> m_outtakeSubsystem.startShooter()))
+      .onFalse(Commands.runOnce(() -> m_outtakeSubsystem.stopShooter()));
+
     // m_driverController.rightStick().toggleOnTrue(new StartEndCommand(
     //     () -> m_driveTrain.enableSpeedLimiter(),
     //     () -> m_driveTrain.enableSpeedLimiter(), 
