@@ -27,12 +27,35 @@ public final class Constants {
     public static final double regularSpeed = 0.7;
   }
 
+  public static class Intake {
+    public static final int intakeAndConveyorPWMPort = 0;
+
+    public static final double intakeSpeed = 1;
+  }
+
+  public static class Climber {
+    public static final int leftClimberMotorPWMPort = 1;
+    public static final int rightClimberMotorPWMPort = 2;
+
+    public static final double climbingSpeed = 0.8;
+  }
+
   public static class Outtake {
-    public static final int leftOuttakeMotorPort = 6;
-    public static final int rightOuttakeMotorPort = 7;
-    public static final int feederMotorPort = 5;
+    public static final int leftOuttakeMotorCANPort = 6;
+    public static final int rightOuttakeMotorCANPort = 7;
+    public static final int wristMotorCANPort = 5;
+    public static final int feederMotorCANPort = 8;
     
     public static final double shootingSpeed = 1;
     public static final double feedingSpeed = 1;
+
+    public static final double wristRaisingSpeed = 0.6;
+    public static final double wristLoweringSpeed = -0.6;
+
+    public static final double maxWristSpeed = 0.28;
+
+    public static final double kP = 0.5;
+    public static final double kI = 0.01;
+    public static final double kD = 0;
   }
 }
