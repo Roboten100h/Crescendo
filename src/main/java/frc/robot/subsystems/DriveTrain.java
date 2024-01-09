@@ -29,7 +29,7 @@ public class DriveTrain extends SubsystemBase {
     m_motorLeftFront.setInverted(true);
 
     m_motorLeftRear.follow(m_motorLeftFront);
-    m_motorRightRear.follow(m_motorRightRear);
+    m_motorRightRear.follow(m_motorRightFront);
   }
 
   public Command enableSpeedLimiter() {
@@ -45,7 +45,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void driveArcade(double move, double rotate) {
-    m_drive.arcadeDrive(m_currentMaxSpeed * move, m_currentMaxSpeed * rotate, true);
+    m_drive.arcadeDrive(m_currentMaxSpeed * move, -m_currentMaxSpeed * rotate, true);
   }
 
   @Override
