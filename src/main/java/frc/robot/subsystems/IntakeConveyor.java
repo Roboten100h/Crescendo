@@ -28,6 +28,10 @@ public class IntakeConveyor extends SubsystemBase {
     m_intakeAndConveyorMotor.set(Constants.Intake.intakeSpeed);
   }
 
+  public void startIntakeInverted() {
+    m_intakeAndConveyorMotor.set(-Constants.Intake.intakeSpeed);
+  }
+
   public void stopMotor() {
     m_intakeAndConveyorMotor.set(0);
   }
