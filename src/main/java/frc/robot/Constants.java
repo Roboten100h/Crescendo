@@ -24,7 +24,7 @@ public final class Constants {
     public static final int motorRightRearPort = 4;
 
     public static final double slowSpeed = 0.5; 
-    public static final double regularSpeed = 0.7;
+    public static final double regularSpeed = 0.6;
   }
 
   public static class Intake {
@@ -54,8 +54,8 @@ public final class Constants {
 
     public static final double maxWristSpeed = 0.28;
 
-    public static final double kP = 0.5;
-    public static final double kI = 0.01;
+    public static final double kP = 0.05;
+    public static final double kI = 0.001;
     public static final double kD = 0;
   }
 }
