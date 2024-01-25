@@ -6,12 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 // import frc.robot.commands.Autos;
-
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
-
+import frc.robot.subsystems.IntakeConveyor;
 import frc.robot.subsystems.Outtake;
+
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,21 +27,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   private final Outtake m_outtakeSubsystem = new Outtake();
-  // private final DriveTrain m_driveTrain = new DriveTrain();
+  private final DriveTrain m_driveTrain = new DriveTrain();
+  private final Climber m_Climber = new Climber();
+  private final IntakeConveyor m_IntakeConveyor = new IntakeConveyor();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // m_driveTrain.setDefaultCommand(new RunCommand(() -> {
-    //   double move = m_driverController.getLeftY();
-    //   double turn = m_driverController.getRightX();
+    m_driveTrain.setDefaultCommand(new RunCommand(() -> {
+      double move = m_driverController.getLeftY();
+      double turn = m_driverController.getRightX();
 
-    //   m_driveTrain.driveArcade(move, turn);
-    // }, m_driveTrain));
+      m_driveTrain.driveArcade(move, turn);
+    }, m_driveTrain));
    
     // Configure the trigger bindings
     configureBindings();
@@ -57,18 +62,55 @@ public class RobotContainer {
   private void configureBindings() {
 
     m_driverController.rightBumper()
-      .onTrue(Commands.runOnce(() -> m_outtakeSubsystem.setFeederSpeed(m_driverController.getRightY())))
-      .onFalse(Commands.runOnce(() -> m_outtakeSubsystem.stopFeeder()));
+      .onTrue(runOnce(() -> m_outtakeSubsystem.startFeeder()))
+      .onFalse(runOnce(() -> m_outtakeSubsystem.stopFeeder()));
     
     m_driverController.leftBumper()
-      .onTrue(Commands.runOnce(() -> m_outtakeSubsystem.startShooter()))
-      .onFalse(Commands.runOnce(() -> m_outtakeSubsystem.stopShooter()));
+      .onTrue(runOnce(() -> m_outtakeSubsystem.startShooter()))
+      .onFalse(runOnce(() -> m_outtakeSubsystem.stopShooter()));
 
-    // m_driverController.rightStick().toggleOnTrue(new StartEndCommand(
-    //     () -> m_driveTrain.enableSpeedLimiter(),
-    //     () -> m_driveTrain.enableSpeedLimiter(), 
-    //     m_driveTrain));
-      
+    m_driverController.rightStick().onTrue(runOnce(() -> m_driveTrain.toggleDirection()));
+
+    // m_driverController.leftStick().toggleOnTrue(new StartEndCommand(
+    //   () -> m_driveTrain.invertDrivetrain(),
+    //   () -> m_driveTrain.regularDirection(),
+    //   m_driveTrain));
+
+    m_driverController.leftStick().onTrue(runOnce(() -> m_driveTrain.toggleDirection()));
+
+    m_driverController.povDown()
+      .onTrue(runOnce(() -> m_IntakeConveyor.startIntake()))
+      .onFalse(runOnce(() -> m_IntakeConveyor.stopMotor()));
+    
+    m_driverController.povUp()
+      .onTrue(runOnce(() -> {
+        m_IntakeConveyor.startIntakeInverted();
+        m_outtakeSubsystem.startFeeder();
+      } ))
+      .onFalse(runOnce(() -> {
+        m_IntakeConveyor.stopMotor();
+        m_outtakeSubsystem.stopFeeder();
+      }));
+
+    m_driverController.povRight()
+      .onTrue(runOnce(() -> m_outtakeSubsystem.startShooterAmp()))
+      .onFalse(runOnce(() -> m_outtakeSubsystem.stopShooter()));
+
+    m_driverController.a()
+      .onTrue(runOnce(() -> m_Climber.climb()))
+      .onFalse(runOnce(() -> m_Climber.stopClimbing()));
+
+    m_driverController.y()
+      .onTrue(runOnce(() -> m_Climber.unwind()))
+      .onFalse(runOnce(() -> m_Climber.stopClimbing()));
+
+    m_driverController.rightTrigger(0.2)
+      .onTrue(runOnce(() -> m_outtakeSubsystem.setWristSpeed(m_driverController.getRightTriggerAxis())))
+      .onFalse(runOnce(() -> m_outtakeSubsystem.stopWrist()));
+
+    m_driverController.leftTrigger(0.2)
+      .onTrue(runOnce(() -> m_outtakeSubsystem.setWristSpeed(-m_driverController.getLeftTriggerAxis())))
+      .onFalse(runOnce(() -> m_outtakeSubsystem.stopWrist()));
   }
 
   /**
