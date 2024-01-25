@@ -24,6 +24,9 @@ public class DriveTrain extends SubsystemBase {
 
   private double m_currentMaxSpeed = Constants.DriveTrain.regularSpeed;
 
+  private boolean m_inverted = false;
+
+
   /** Creates a new DriveTrain. */
   public DriveTrain() {
     m_motorLeftFront.setInverted(true);
@@ -44,8 +47,22 @@ public class DriveTrain extends SubsystemBase {
     });
   }
 
+  public void invertDrivetrain() {
+    m_inverted = true;
+  }
+
+  public void regularDirection() {
+    m_inverted = false;
+  }
+
+  public void toggleDirection() {
+    m_inverted = !m_inverted;
+  }
+
   public void driveArcade(double move, double rotate) {
-    m_drive.arcadeDrive(m_currentMaxSpeed * move, -m_currentMaxSpeed * rotate, true);
+    double possiblyInvertedMove = m_inverted ? -move : move;
+    
+    m_drive.arcadeDrive(m_currentMaxSpeed * possiblyInvertedMove, -m_currentMaxSpeed * rotate, true);
   }
 
   @Override
